@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminación de Datos - Marketplace PBS</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #dc3545;
+            border-bottom: 3px solid #dc3545;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #2c3e50;
+            margin-top: 30px;
+        }
+        .warning-box {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .success-box {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        .btn {
+            background: #dc3545;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        .btn:hover {
+            background: #c82333;
+        }
+        .steps {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .step {
+            margin-bottom: 15px;
+            padding-left: 30px;
+            position: relative;
+        }
+        .step::before {
+            content: counter(step-counter);
+            counter-increment: step-counter;
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #1877f2;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .steps {
+            counter-reset: step-counter;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Eliminación de Datos de Usuario</h1>
+        
+        <div class="warning-box">
+            <strong>⚠️ Importante:</strong> La eliminación de datos es permanente e irreversible. Una vez procesada, no podremos recuperar tu información.
+        </div>
+
+        <h2>¿Qué datos se eliminarán?</h2>
+        <ul>
+            <li>Tu información de perfil asociada con la aplicación</li>
+            <li>Tokens de acceso almacenados</li>
+            <li>Historial de publicaciones en la aplicación</li>
+            <li>Preferencias y configuraciones</li>
+        </ul>
+
+        <div class="steps">
+            <h2>Opciones para Eliminar tus Datos</h2>
+            
+            <div class="step">
+                <strong>Opción 1: Desde Facebook</strong><br>
+                Ve a Configuración → Aplicaciones y sitios web → Marketplace PBS → Eliminar
+            </div>
+            
+            <div class="step">
+                <strong>Opción 2: Desde la App</strong><br>
+                Abre la app → Configuración de Facebook → Desconectar cuenta
+            </div>
+            
+            <div class="step">
+                <strong>Opción 3: Solicitud Manual</strong><br>
+                Completa el formulario a continuación
+            </div>
+        </div>
+
+        <h2>Formulario de Solicitud de Eliminación</h2>
+        
+        <form id="deletionForm" onsubmit="handleSubmit(event)">
+            <div class="form-group">
+                <label for="email">Email asociado con tu cuenta de Facebook:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="facebook_id">ID de Facebook (opcional):</label>
+                <input type="text" id="facebook_id" name="facebook_id" placeholder="Si lo conoces">
+            </div>
+
+            <div class="form-group">
+                <label for="reason">Razón para la eliminación:</label>
+                <select id="reason" name="reason" required>
+                    <option value="">Selecciona una razón</option>
+                    <option value="no_longer_using">Ya no uso la aplicación</option>
+                    <option value="privacy_concerns">Preocupaciones de privacidad</option>
+                    <option value="found_alternative">Encontré una alternativa</option>
+                    <option value="technical_issues">Problemas técnicos</option>
+                    <option value="other">Otro</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="additional_info">Información adicional (opcional):</label>
+                <textarea id="additional_info" name="additional_info" placeholder="Cualquier información adicional que quieras compartir"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="confirm" name="confirm" required>
+                    Confirmo que entiendo que esta acción es irreversible y que todos mis datos serán eliminados permanentemente.
+                </label>
+            </div>
+
+            <button type="submit" class="btn">Solicitar Eliminación de Datos</button>
+        </form>
+
+        <div id="successMessage" class="success-box" style="display: none;">
+            <strong>✅ Solicitud Enviada</strong><br>
+            Tu solicitud de eliminación de datos ha sido recibida. Procesaremos tu solicitud dentro de 30 días y te enviaremos una confirmación por email.
+        </div>
+
+        <h2>Tiempo de Procesamiento</h2>
+        <ul>
+            <li><strong>Eliminación automática:</strong> Inmediata (Opciones 1 y 2)</li>
+            <li><strong>Solicitud manual:</strong> Hasta 30 días</li>
+        </ul>
+
+        <h2>Después de la Eliminación</h2>
+        <ul>
+            <li>No podrás acceder a la aplicación con tu cuenta anterior</li>
+            <li>Tus publicaciones en Facebook Marketplace permanecerán (debes eliminarlas manualmente desde Facebook)</li>
+            <li>Puedes crear una nueva cuenta en el futuro si lo deseas</li>
+        </ul>
+
+        <h2>Contacto</h2>
+        <p>Si tienes preguntas sobre el proceso de eliminación:</p>
+        <ul>
+            <li><strong>Email:</strong> privacy@marketplacepbs.com</li>
+            <li><strong>Asunto:</strong> "Eliminación de Datos - [Tu Email]"</li>
+        </ul>
+
+        <p><a href="privacy_policy.html">← Volver a Política de Privacidad</a></p>
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            
+            // Aquí normalmente enviarías los datos a tu servidor
+            // Por ahora, solo mostramos el mensaje de éxito
+            
+            const form = document.getElementById('deletionForm');
+            const successMessage = document.getElementById('successMessage');
+            
+            // Simular envío
+            setTimeout(() => {
+                form.style.display = 'none';
+                successMessage.style.display = 'block';
+                
+                // Opcional: enviar email con los datos del formulario
+                const formData = new FormData(form);
+                const data = Object.fromEntries(formData);
+                console.log('Datos de eliminación:', data);
+                
+                // En producción, aquí harías una llamada a tu API
+                // fetch('/api/data-deletion', { method: 'POST', body: formData })
+                
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
