@@ -1,0 +1,45 @@
+{
+  "name": "custom-oobe-windows",
+  "version": "1.0.0",
+  "description": "Custom OOBE (Out-of-Box Experience) para Windows con integración completa del sistema",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win",
+    "server": "node server/api.js"
+  },
+  "keywords": [
+    "oobe",
+    "windows",
+    "setup",
+    "electron"
+  ],
+  "author": "Custom OOBE",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "sqlite3": "^5.1.6",
+    "cors": "^2.8.5",
+    "node-wifi": "^2.0.15",
+    "node-powershell": "^5.0.1"
+  },
+  "devDependencies": {
+    "electron": "^27.0.0",
+    "electron-builder": "^24.6.4"
+  },
+  "build": {
+    "appId": "com.customoobe.windows",
+    "productName": "Custom OOBE",
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": false,
+      "createStartMenuShortcut": false
+    }
+  }
+}

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuración Inicial - Custom OOBE</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app" class="theme-light">
+        <!-- Animación lateral inspirada en Mac OS X -->
+        <div class="animation-panel">
+            <div class="animation-content">
+                <div class="orb orb-1"></div>
+                <div class="orb orb-2"></div>
+                <div class="orb orb-3"></div>
+                <div class="particles"></div>
+            </div>
+        </div>
+
+        <!-- Panel de contenido -->
+        <div class="content-panel">
+            <!-- Pantalla 1: Bienvenida -->
+            <div class="screen active" id="screen-welcome">
+                <div class="screen-content fade-in">
+                    <h1 class="title-large">¡Gracias por tu compra!</h1>
+                </div>
+            </div>
+
+            <!-- Pantalla 2: Disfruta -->
+            <div class="screen" id="screen-enjoy">
+                <div class="screen-content fade-in">
+                    <h1 class="title-large">Disfruta de tu <span class="highlight" id="device-name">Nuevo Equipo</span></h1>
+                </div>
+            </div>
+
+            <!-- Pantalla 3: Configuración necesaria -->
+            <div class="screen" id="screen-setup-intro">
+                <div class="screen-content fade-in">
+                    <h1 class="title-large">Pero primero...</h1>
+                    <p class="subtitle">Necesitas configurar unas cosas</p>
+                </div>
+            </div>
+
+            <!-- Pantalla 4: Usuario -->
+            <div class="screen" id="screen-user">
+                <div class="screen-content">
+                    <h2 class="title">¿Quién usará esta computadora?</h2>
+                    
+                    <div class="profile-section">
+                        <div class="profile-picture-selector">
+                            <div class="profile-picture" id="selected-profile-pic">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                                </svg>
+                            </div>
+                            <button class="btn-secondary" id="btn-change-picture">Cambiar foto</button>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="text" id="username" class="input-field" placeholder="Nombre de usuario" maxlength="20">
+                            <input type="password" id="password" class="input-field" placeholder="Contraseña (opcional)" style="margin-top: 15px;">
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn-primary" id="btn-user-next">Continuar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal de selección de foto -->
+            <div class="modal" id="modal-profile-picture">
+                <div class="modal-content">
+                    <h3>Selecciona tu foto de perfil</h3>
+                    
+                    <div class="profile-icons-grid" id="profile-icons-grid">
+                        <!-- Iconos predefinidos -->
+                    </div>
+
+                    <div class="camera-section">
+                        <button class="btn-secondary" id="btn-camera">
+                            <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                                <path d="M12 15c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3z"/>
+                                <path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>
+                            </svg>
+                            Tomar foto con cámara
+                        </button>
+                        <video id="camera-preview" style="display: none;"></video>
+                        <canvas id="camera-canvas" style="display: none;"></canvas>
+                    </div>
+
+                    <button class="btn-primary" id="btn-close-modal">Cerrar</button>
+                </div>
+            </div>
+
+            <!-- Pantalla 5: Red WiFi -->
+            <div class="screen" id="screen-wifi">
+                <div class="screen-content">
+                    <h2 class="title">Conectar a Internet</h2>
+                    <p class="subtitle">Selecciona una red WiFi o conecta un cable Ethernet</p>
+
+                    <div class="connection-status" id="connection-status">
+                        <div class="status-indicator"></div>
+                        <span id="connection-text">No conectado</span>
+                    </div>
+
+                    <div class="wifi-list" id="wifi-list">
+                        <div class="loading">Buscando redes disponibles...</div>
+                    </div>
+
+                    <div class="wifi-password-section" id="wifi-password-section" style="display: none;">
+                        <input type="password" id="wifi-password" class="input-field" placeholder="Contraseña de la red">
+                        <button class="btn-primary" id="btn-connect-wifi">Conectar</button>
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn-secondary" id="btn-wifi-skip">Omitir</button>
+                        <button class="btn-primary" id="btn-wifi-next" disabled>Continuar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pantalla 6: Programas -->
+            <div class="screen" id="screen-programs">
+                <div class="screen-content">
+                    <h2 class="title">Programas útiles</h2>
+                    <p class="subtitle">Selecciona los programas que deseas instalar</p>
+
+                    <div class="programs-grid" id="programs-grid">
+                        <!-- Programas se cargarán dinámicamente -->
+                    </div>
+
+                    <div class="installation-progress" id="installation-progress" style="display: none;">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progress-fill"></div>
+                        </div>
+                        <p id="installation-status">Instalando programas...</p>
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn-secondary" id="btn-programs-skip">Omitir</button>
+                        <button class="btn-primary" id="btn-programs-install">Instalar seleccionados</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pantalla 7: Tema -->
+            <div class="screen" id="screen-theme">
+                <div class="screen-content">
+                    <h2 class="title">Personaliza tu experiencia</h2>
+                    <p class="subtitle">Selecciona el tema de tu preferencia</p>
+
+                    <div class="theme-selector">
+                        <div class="theme-option" data-theme="light">
+                            <div class="theme-preview theme-preview-light">
+                                <div class="preview-window"></div>
+                                <div class="preview-taskbar"></div>
+                            </div>
+                            <p>Tema Claro</p>
+                        </div>
+
+                        <div class="theme-option" data-theme="dark">
+                            <div class="theme-preview theme-preview-dark">
+                                <div class="preview-window"></div>
+                                <div class="preview-taskbar"></div>
+                            </div>
+                            <p>Tema Oscuro</p>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn-primary" id="btn-theme-next">Continuar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pantalla 8: Fondos -->
+            <div class="screen" id="screen-wallpapers">
+                <div class="screen-content">
+                    <h2 class="title">Fondos de pantalla</h2>
+                    <p class="subtitle">Elige tu fondo de pantalla y pantalla de bloqueo</p>
+
+                    <div class="wallpaper-section">
+                        <h3>Fondo de escritorio</h3>
+                        <div class="wallpaper-grid" id="wallpaper-grid">
+                            <!-- Fondos se cargarán dinámicamente -->
+                        </div>
+                    </div>
+
+                    <div class="wallpaper-section">
+                        <h3>Pantalla de bloqueo</h3>
+                        <div class="wallpaper-grid" id="lockscreen-grid">
+                            <!-- Fondos se cargarán dinámicamente -->
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn-primary" id="btn-wallpapers-next">Continuar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pantalla 9: Reseña -->
+            <div class="screen" id="screen-review">
+                <div class="screen-content">
+                    <h2 class="title">¿Qué te pareció?</h2>
+                    <p class="subtitle">Tu opinión nos ayuda a mejorar</p>
+
+                    <div class="review-section">
+                        <div class="stars-rating" id="stars-rating">
+                            <span class="star" data-rating="1">★</span>
+                            <span class="star" data-rating="2">★</span>
+                            <span class="star" data-rating="3">★</span>
+                            <span class="star" data-rating="4">★</span>
+                            <span class="star" data-rating="5">★</span>
+                        </div>
+
+                        <textarea id="review-text" class="textarea-field" placeholder="Cuéntanos tu experiencia (opcional)" rows="5"></textarea>
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn-secondary" id="btn-review-skip">Omitir</button>
+                        <button class="btn-primary" id="btn-review-submit">Enviar reseña</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pantalla 10: Finalización -->
+            <div class="screen" id="screen-finish">
+                <div class="screen-content fade-in">
+                    <h1 class="title-large">¡Muchas gracias por configurar tu equipo!</h1>
+                </div>
+            </div>
+
+            <!-- Pantalla 11: A continuación -->
+            <div class="screen" id="screen-final">
+                <div class="screen-content fade-in">
+                    <h1 class="title-large">A continuación...</h1>
+                    <p class="subtitle-large">Disfruta</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
